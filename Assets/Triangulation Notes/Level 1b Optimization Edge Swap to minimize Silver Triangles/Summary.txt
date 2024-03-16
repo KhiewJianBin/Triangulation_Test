@@ -1,0 +1,14 @@
+Ear-clipping Based Algorithms of Generating
+High-quality Polygon Triangulation
+
+Kong, Everett and Toussaint algorithm [9], which adopts the Graham scan to select
+ears.This algorithm is sensitive to the shape of the polygon and runs in
+O(n(r+1)) time
+
+Sloan [6] also developed an
+O(n2) ear-clipping algorithm
+
+Explanation Basic Alogirhtm based on O’Rourke, J. (1998). to give less silver triangles
+Explanation Improve Alogrithm to include "edge swaping"
+
+Explanation to create "bridges" to deal with polygon with holes

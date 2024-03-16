@@ -1,0 +1,15 @@
+Summary of Triangulation Modified Ear Clipping via choosing to clip triangles based on aspect ratio and using Visabilty graph post
+ triangulation to optimize triangles 2011
+ 
+ Triangulation by standard ear-slicing
+ Toussaint’s strip triangulation
+ Triangulating a monotone polygon
+ 
+ Improved Triangulation
+ 1. search for best diagonal to slice an ear
+ 2. Triangulate normally, then compute visibility gragh, 
+ 3. look though the graph for intersection with the triangles of triangulation
+ 4. the diagonal that has highest intersection of triangles (Stabbing number)
+ 5. sort diagonals by highest stabbing number,
+ 6. make sub polygon using highest stabbing number
+ 7. tiangulate sub polygon

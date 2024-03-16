@@ -1,0 +1,12 @@
+Triangulation 0(n^3) by Meisters two-ears theorem
+'prune-and-search' in O(n^2) by E1Gindy/Godfried Toussaint
+Triangluation of polygon into sub monotone polygon O(n log n) Garey (1978)
+Another triangulation of polygon into sub monopolygon by Toussaint 1984
+Another triangulation of sub monopolygon by Fournier and Montuno(1984)
+divide-and-conquer O(n log n) apporch by Chazelle (1982) 
+Triangulation O(n log log n) by Tarjan and Van Wyk (1988)
+Also O(n log log n) by Kirkpatrick 1990
+Triangulation O(n) by Chazelle 1990
+Triangulation O(kn) by Kong based on Graham scan, should be used when k is small
+
+Describe the algorithm Triangulation Strip O(n(1+t)) by Godfried Toussaint

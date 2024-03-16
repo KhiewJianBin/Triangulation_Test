@@ -1,0 +1,3 @@
+Go though ear-clipping algorithm step by step
+Support Polygon with holes
+Support Polygon with multiple holes, Hierachy of polygon with holes
