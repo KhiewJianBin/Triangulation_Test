@@ -1,23 +1,25 @@
 {
   "dependencies": {
     "asim.unity.extensions": {
-      "version": "file:asim.unity.extensions",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
-    },
-    "asim.unity.helpers": {
-      "version": "0.5.1",
+      "version": "0.2.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://registry.npmjs.com"
     },
+    "asim.unity.helpers": {
+      "version": "file:asim.unity.helpers",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "asim.unity.utils.geometry": {
       "version": "file:asim.unity.utils.geometry",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
+      "dependencies": {
+        "asim.unity.helpers": "0.5.1"
+      }
     },
     "com.unity.2d.animation": {
       "version": "9.1.0",
