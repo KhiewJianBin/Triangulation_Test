@@ -10,20 +10,19 @@ namespace asim.unity.geometry.triangulation
         /// Given an already triangulated mesh, with vertices and indices, Perform the Delaunay Flip Edge algorithm
         /// Uses the DoublyConnectedEdgeList / HalfEdges data structure
         /// </summary>
-        public static DoublyConnectedEdgeList Delaunay_FlipEdge(List<Vector3> vertices, List<int> indices)
+        public static List<int> Delaunay_BowyerWatson(List<Vector3> vertices, List<int> indices)
         {
             //1. Prep for Flipedge - Convert this to the HalfEdge DataStruct
             DoublyConnectedEdgeList dcel = DoublyConnectedEdgeList.CreateFromTriangleMesh(vertices, indices);
 
             //2. Loop though all edges
             var edgestoflip = dcel.HalfEdges;
-            for (int i = 0; i < edgestoflip.Count; i++)
+            while (edgestoflip.Count > 0)
             {
-                var edge = edgestoflip[i];
-            
+                var edge = edgestoflip[0];
+
                 //3. Check if it does not satisfy delaunay condition, sum of angle <= 180, flip the edge
-                //4. Note, using the current foreach loop will also check the twin again, but its acutally not required
-                if (edge.Twin.IncidentFace != null)
+                if(edge.Twin.IncidentFace != null)
                 {
                     var Tri1_P1 = edge.Next.Origin.Pos;
                     var Tri1_P2 = edge.Next.Next.Origin.Pos;
@@ -38,18 +37,15 @@ namespace asim.unity.geometry.triangulation
 
                     bool isdelaunay = Tri1Angle + Tri2Angle <= 180;
 
-                    if (!isdelaunay)
-                    {
-                        //5. Reset loop and do it again from the top (because state has changed due to flip
-                        if (DoublyConnectedEdgeList.FlipEdge(edge))
-                        {
-                            i = 0;
-                        }
-                    }
+                    if (!isdelaunay) DoublyConnectedEdgeList.FlipEdge(edge);
+
+                    dcel.HalfEdges.Remove(edge.Twin);
                 }
+
+                dcel.HalfEdges.Remove(edge);
             }
 
-            return dcel;
+            return dcel.GetIndicesFromHalfEdges();
         }
     }
 }
