@@ -8,11 +8,10 @@
       "url": "https://registry.npmjs.com"
     },
     "asim.unity.helpers": {
-      "version": "0.5.1",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://registry.npmjs.com"
+      "version": "file:asim.unity.helpers@0.5.1",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
     },
     "asim.unity.utils.geometry": {
       "version": "file:asim.unity.utils.geometry",

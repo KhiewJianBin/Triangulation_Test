@@ -10,7 +10,7 @@ using asim.unity.geometry.triangulation;
 /// </summary>
 
 [ExecuteInEditMode]
-public class Incremental_Example : MonoBehaviour
+public class TriangulationPoints_Incremental_Example : MonoBehaviour
 {
     [SerializeField] Text Text;
     [SerializeField] GameObject Points;

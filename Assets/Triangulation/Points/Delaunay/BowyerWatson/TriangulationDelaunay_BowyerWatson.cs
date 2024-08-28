@@ -7,45 +7,120 @@ namespace asim.unity.geometry.triangulation
     public static partial class Triangulation
     {
         /// <summary>
-        /// Given an already triangulated mesh, with vertices and indices, Perform the Delaunay Flip Edge algorithm
-        /// Uses the DoublyConnectedEdgeList / HalfEdges data structure
+        /// BowyerWatson Delaunay triangulations
+        /// Uses Welzl for Super Triangle
         /// </summary>
-        public static List<int> Delaunay_BowyerWatson(List<Vector3> vertices, List<int> indices)
+        public static List<int> Delaunay_BowyerWatson(List<Vector2> points)
         {
-            //1. Prep for Flipedge - Convert this to the HalfEdge DataStruct
-            DoublyConnectedEdgeList dcel = DoublyConnectedEdgeList.CreateFromTriangleMesh(vertices, indices);
+            //1a. Use welzl algorithm to get minimum circle
+            var minCircle = SmallestCircle.Welzl(new(points));
+            float step = Mathf.PI * 2 / 3;
 
-            //2. Loop though all edges
-            var edgestoflip = dcel.HalfEdges;
-            while (edgestoflip.Count > 0)
+            //1b. Create Super Triangle from minimum circle
+            Vector2 center = minCircle.Center;
+            float radius = minCircle.Radius * 2f;
+            Vector2 tp0 = center + new Vector2(Mathf.Cos(step * 0), Mathf.Sin(step * 0)) * radius;
+            Vector2 tp1 = center + new Vector2(Mathf.Cos(step * 1), Mathf.Sin(step * 1)) * radius;
+            Vector2 tp2 = center + new Vector2(Mathf.Cos(step * 2), Mathf.Sin(step * 2)) * radius;
+            var superTriangle = new Triangle(tp0, tp1, tp2);
+
+            //2. Start with super triangle
+            List<Triangle> triangles = new() { superTriangle };
+
+            //3. Add points ony by one
+            for (int i = 0; i < points.Count; i++)
             {
-                var edge = edgestoflip[0];
-
-                //3. Check if it does not satisfy delaunay condition, sum of angle <= 180, flip the edge
-                if(edge.Twin.IncidentFace != null)
-                {
-                    var Tri1_P1 = edge.Next.Origin.Pos;
-                    var Tri1_P2 = edge.Next.Next.Origin.Pos;
-                    var Tri1_P3 = edge.Next.Next.Next.Origin.Pos;
-
-                    var Tri2_P1 = edge.Twin.Next.Origin.Pos;
-                    var Tri2_P2 = edge.Twin.Next.Next.Origin.Pos;
-                    var Tri2_P3 = edge.Twin.Next.Next.Next.Origin.Pos;
-
-                    var Tri1Angle = Vector3.Angle(Tri1_P1 - Tri1_P2, Tri1_P3 - Tri1_P2);
-                    var Tri2Angle = Vector3.Angle(Tri2_P1 - Tri2_P2, Tri2_P3 - Tri2_P2);
-
-                    bool isdelaunay = Tri1Angle + Tri2Angle <= 180;
-
-                    if (!isdelaunay) DoublyConnectedEdgeList.FlipEdge(edge);
-
-                    dcel.HalfEdges.Remove(edge.Twin);
-                }
-
-                dcel.HalfEdges.Remove(edge);
+                var point = points[i];
+                triangles = addVertex(point, triangles);
             }
 
-            return dcel.GetIndicesFromHalfEdges();
+            //4. Remove triangles that share edges with super triangle
+            triangles = triangles.FindAll(triangle =>
+                !(triangle.v0 == superTriangle.v0 || triangle.v0 == superTriangle.v1 || triangle.v0 == superTriangle.v2 ||
+                triangle.v1 == superTriangle.v0 || triangle.v1 == superTriangle.v1 || triangle.v1 == superTriangle.v2 ||
+                triangle.v2 == superTriangle.v0 || triangle.v2 == superTriangle.v1 || triangle.v2 == superTriangle.v2)
+            );
+
+            //5. Reorder each triangle vertices to match draw order, return as triangle indices
+            List<int> trianglesReordered = new List<int>(triangles.Count * 3);
+            for (int i = 0; i < triangles.Count; i++)
+            {
+                var windingOrder = GeometryUtils.Orientation(triangles[i].v0, triangles[i].v1, triangles[i].v2);
+                if (windingOrder < 0)
+                {
+                    trianglesReordered.Add(points.FindIndex(v => v == triangles[i].v0));
+                    trianglesReordered.Add(points.FindIndex(v => v == triangles[i].v1));
+                    trianglesReordered.Add(points.FindIndex(v => v == triangles[i].v2));
+                }
+                else //if (windingOrder > 0)
+                {
+                    trianglesReordered.Add(points.FindIndex(v => v == triangles[i].v2));
+                    trianglesReordered.Add(points.FindIndex(v => v == triangles[i].v1));
+                    trianglesReordered.Add(points.FindIndex(v => v == triangles[i].v0));
+                }
+            }
+
+            return trianglesReordered;
+
+            List<Triangle> addVertex(Vector2 vertex, List<Triangle> triangles)
+            {
+                var edges = new List<Edge>();
+
+                var newTriangles = new List<Triangle>();
+                for (int i = 0; i < triangles.Count; i++)
+                {
+                    var triangle = triangles[i];
+
+                    if (GeometryUtils.InsideCircumcircle(vertex, triangle.v0, triangle.v1, triangle.v2))
+                    {
+                        edges.Add(new Edge(triangle.v0, triangle.v1));
+                        edges.Add(new Edge(triangle.v1, triangle.v2));
+                        edges.Add(new Edge(triangle.v2, triangle.v0));
+                    }
+                    else
+                    {
+                        newTriangles.Add(triangle);
+                    }
+                }
+                triangles = newTriangles;
+
+                // Get unique edges
+                edges = uniqueEdges(edges);
+                var e2 = new List<Edge>(edges);
+
+                // Create new triangles from the unique edges and new vertex
+                foreach (var edge in e2)
+                {
+                    triangles.Add(new Triangle(edge.v0, edge.v1, vertex));
+                    edges.Remove(edge);
+                }
+
+                return triangles;
+            }
+
+            List<Edge> uniqueEdges(List<Edge> edges)
+            {
+                var uniqueEdges = new List<Edge>();
+
+                for (var i = 0; i < edges.Count; ++i)
+                {
+                    var isUnique = true;
+
+                    // See if edge is unique
+                    for (var j = 0; j < edges.Count; ++j)
+                    {
+                        if (i != j && edges[i].Equals(edges[j]))
+                        {
+                            isUnique = false;
+                            break;
+                        }
+                    }
+
+                    if (isUnique) uniqueEdges.Add(edges[i]);
+                }
+
+                return uniqueEdges;
+            }
         }
     }
 }

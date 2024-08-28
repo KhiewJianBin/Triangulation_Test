@@ -8,7 +8,7 @@ using asim.unity.utils.geometry;
 using static asim.unity.utils.geometry.DoublyConnectedEdgeList;
 
 [ExecuteInEditMode]
-public class TriangulationDelaunay_BowyerWatson_Example : MonoBehaviour
+public class TriangulationDelaunay_FlipEdge_Example : MonoBehaviour
 {
     [SerializeField] Text Text;
     [SerializeField] GameObject Points;
