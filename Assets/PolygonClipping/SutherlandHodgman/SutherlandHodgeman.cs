@@ -1,7 +1,9 @@
-using asim.unity.extensions;
-using asim.unity.utils.geometry;
 using System.Collections.Generic;
+
 using UnityEngine;
+
+using asim.unity.geometry;
+using asim.unity.extensions;
 
 public static partial class PolygonClipping
 {

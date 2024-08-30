@@ -1,0 +1,17 @@
+{
+    "name": "asim.unity.geometry.triangulation",
+    "rootNamespace": "asim.unity.geometry.triangulation",
+    "references": [
+        "GUID:39359d03976440d47abe204b4f2e595b",
+        "GUID:4ee70900f505fe647a270779784861d1"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using System.Collections.Generic;
-using asim.unity.utils.geometry;
+using asim.unity.geometry;
 
 [ExecuteInEditMode]
 public class SutherlandHodgeman_Example : MonoBehaviour
