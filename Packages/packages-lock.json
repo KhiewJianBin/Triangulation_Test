@@ -1,17 +1,35 @@
 {
   "dependencies": {
     "asim.unity.extensions": {
-      "version": "0.2.2",
+      "version": "0.2.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://registry.npmjs.com"
     },
-    "asim.unity.helpers": {
-      "version": "file:asim.unity.helpers@0.5.1",
+    "asim.unity.geometry": {
+      "version": "0.1.0",
       "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.com"
+    },
+    "asim.unity.geometry.triangulation": {
+      "version": "0.1.5",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "asim.unity.extensions": "0.2.3",
+        "asim.unity.geometry": "0.1.0"
+      },
+      "url": "https://registry.npmjs.com"
+    },
+    "asim.unity.helpers": {
+      "version": "0.5.4",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.com"
     },
     "com.unity.2d.animation": {
       "version": "9.1.0",

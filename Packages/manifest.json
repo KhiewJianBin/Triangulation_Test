@@ -1,6 +1,9 @@
 {
   "dependencies": {
-    "asim.unity.extensions": "0.2.2",
+    "asim.unity.extensions": "0.2.3",
+    "asim.unity.geometry": "0.1.0",
+    "asim.unity.geometry.triangulation": "0.1.5",
+    "asim.unity.helpers": "0.5.4",
     "com.unity.collab-proxy": "2.3.1",
     "com.unity.feature.2d": "2.0.0",
     "com.unity.ide.rider": "3.0.27",
